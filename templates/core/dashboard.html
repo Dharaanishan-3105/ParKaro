@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard – ParKaro{% endblock %}
+
+{% block content %}
+  <h2>User Dashboard</h2>
+
+  <div class="card">
+    <h3>Active Bookings</h3>
+    {% if active_bookings %}
+      <ul>
+        {% for booking in active_bookings %}
+          <li>
+            <a href="{% url 'core:booking_detail' booking.id %}">
+              Booking #{{ booking.id }} – {{ booking.location.name }} – Slot {{ booking.slot.slot_code }}
+            </a>
+            ({{ booking.entry_datetime_expected }} → {{ booking.exit_datetime_expected }})
+            |
+            <a href="{% url 'core:extend_booking' booking.id %}">Extend</a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">No active bookings.</p>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <h3>Recent Bookings</h3>
+    {% if past_bookings %}
+      <ul>
+        {% for booking in past_bookings %}
+          <li>
+            Booking #{{ booking.id }} – {{ booking.location.name }} – {{ booking.status }}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">No past bookings yet.</p>
+    {% endif %}
+  </div>
+{% endblock %}

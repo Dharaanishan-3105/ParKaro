@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}ParKaro – Smart Parking{% endblock %}
+
+{% block content %}
+  <section class="hero">
+    <div class="card hero-left">
+      <div class="hero-title">Turn parking chaos into one-tap peace.</div>
+      <div class="hero-subtitle">
+        ParKaro connects drivers with verified parking spaces in real time – book your slot
+        before you arrive, skip the circling, and focus on where you need to be.
+      </div>
+      <button class="btn-primary" onclick="window.location.href='{% url 'core:locations_list' %}'">
+        Find parking near me
+      </button>
+      <p class="muted">
+        For businesses, ParKaro transforms empty spaces into revenue with live analytics and
+        automated scheduling.
+      </p>
+      <div class="hero-metrics">
+        <div class="hero-metric">
+          <span class="hero-metric-label">Average time saved</span>
+          <span class="hero-metric-value">15+ minutes / trip</span>
+        </div>
+        <div class="hero-metric">
+          <span class="hero-metric-label">Occupancy boost</span>
+          <span class="hero-metric-value">Up to 30%</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="card">
+        <h3>Why drivers love ParKaro</h3>
+        <ul>
+          <li>See real-time slot availability before you leave.</li>
+          <li>Lock your space with instant digital QR tickets.</li>
+          <li>Extend your stay from your phone – no more rushing back.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Why parking owners choose us</h3>
+        <ul>
+          <li>Dynamic pricing for peak hours and events.</li>
+          <li>Revenue and utilization analytics in one dashboard.</li>
+          <li>Automated overtime detection and fine management.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>How ParKaro works</h2>
+    <ol>
+      <li>Search nearby locations and pick the best spot on the map.</li>
+      <li>Choose your slot, entry time, and duration – see pricing instantly.</li>
+      <li>Pay securely and enter with your digital QR ticket.</li>
+    </ol>
+  </section>
+
+  {% if locations %}
+    <section class="card">
+      <h2>Popular ParKaro locations</h2>
+      <ul>
+        {% for location in locations %}
+          <li>
+            <a href="{% url 'core:location_detail' location.id %}">
+              {{ location.name }}
+            </a>
+            – {{ location.address|truncatechars:80 }}
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+  {% endif %}
+{% endblock %}

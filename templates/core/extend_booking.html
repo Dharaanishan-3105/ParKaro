@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Extend Booking #{{ booking.id }} – ParKaro{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <h2>Extend Booking #{{ booking.id }}</h2>
+    <p>
+      Location: {{ booking.location.name }}<br />
+      Slot: {{ booking.slot.slot_code }}<br />
+      Current exit: {{ booking.exit_datetime_expected }}
+    </p>
+    <form method="post">
+      {% csrf_token %}
+      <label for="new_exit">New exit time</label>
+      <input id="new_exit" name="new_exit" type="datetime-local" />
+      <button class="btn-primary" type="submit">Extend booking</button>
+    </form>
+  </div>
+{% endblock %}
+

@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard – ParKaro{% endblock %}
+
+{% block content %}
+  <h2>Admin Dashboard</h2>
+  <p><a href="/admin/">Back to Django Admin</a></p>
+
+  <div class="card">
+    <h3>Summary</h3>
+    <ul>
+      <li>Total bookings: {{ total_bookings }}</li>
+      <li>Total revenue: ₹{{ total_revenue }}</li>
+      <li>Active locations: {{ active_locations }}</li>
+      <li>Active available slots: {{ active_slots }}</li>
+      <li>Total fines (unpaid): ₹{{ total_unpaid_fines }}</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Revenue KPIs</h3>
+    <ul>
+      <li>Revenue today: ₹{{ kpi_today_revenue }}</li>
+      <li>Revenue last 7 days: ₹{{ kpi_week_revenue }}</li>
+      <li>Revenue this month: ₹{{ kpi_month_revenue }}</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Bookings per Day (last 30 days)</h3>
+    <table>
+      <tr>
+        <th>Date</th>
+        <th>Bookings</th>
+      </tr>
+      {% for row in bookings_per_day %}
+        <tr>
+          <td>{{ row.day }}</td>
+          <td>{{ row.count }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Revenue by Location</h3>
+    <table>
+      <tr>
+        <th>Location</th>
+        <th>Revenue</th>
+      </tr>
+      {% for row in revenue_per_location %}
+        <tr>
+          <td>{{ row.booking__location__name }}</td>
+          <td>₹{{ row.total }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Peak Hours (by entries)</h3>
+    <table>
+      <tr>
+        <th>Hour</th>
+        <th>Bookings</th>
+      </tr>
+      {% for row in peak_hours %}
+        <tr>
+          <td>{{ row.hour }}:00</td>
+          <td>{{ row.count }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Bookings by Location</h3>
+    <table>
+      <tr>
+        <th>Location</th>
+        <th>Bookings</th>
+        <th>Revenue</th>
+      </tr>
+      {% for row in bookings_by_location %}
+        <tr>
+          <td>{{ row.location__name }}</td>
+          <td>{{ row.count }}</td>
+          <td>₹{{ row.revenue }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Export Bookings (CSV)</h3>
+    <form method="get" action="{% url 'bookings_report_csv' %}">
+      <label for="start">Start date</label>
+      <input id="start" name="start" type="date" />
+      <label for="end">End date</label>
+      <input id="end" name="end" type="date" />
+      <label for="location">Location</label>
+      <select id="location" name="location">
+        <option value="">All locations</option>
+        {% for loc in locations_for_filter %}
+          <option value="{{ loc.id }}">{{ loc.name }}</option>
+        {% endfor %}
+      </select>
+      <button class="btn-primary" type="submit">Download CSV</button>
+    </form>
+  </div>
+{% endblock %}

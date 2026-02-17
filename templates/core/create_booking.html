@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Create Booking – ParKaro{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <h2>Create Booking</h2>
+
+    <p>
+      Location: <strong>{{ location.name }}</strong><br />
+      Slot: <strong>{{ slot.slot_code }}</strong><br />
+      {% if vehicle %}
+        Vehicle: <strong>{{ vehicle.number }}</strong>
+      {% endif %}
+    </p>
+
+    <form method="post" id="booking-form" data-rate="{{ location.base_rate_per_hour }}">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <p class="muted">
+        Estimated fee: <span id="fee-estimate">–</span>
+      </p>
+      <button class="btn-primary" type="submit">Confirm Booking</button>
+    </form>
+  </div>
+  <script>
+    (function () {
+      const form = document.getElementById("booking-form");
+      if (!form) return;
+      const rate = parseFloat(form.dataset.rate || "0");
+      const entryInput = form.querySelector('input[name="entry_datetime_expected"]');
+      const exitInput = form.querySelector('input[name="exit_datetime_expected"]');
+      const feeSpan = document.getElementById("fee-estimate");
+
+      function updateEstimate() {
+        if (!entryInput.value || !exitInput.value || !rate) return;
+        const start = new Date(entryInput.value);
+        const end = new Date(exitInput.value);
+        if (!(start instanceof Date) || !(end instanceof Date) || end <= start) return;
+        const hours = (end - start) / 36e5;
+        let fee = hours * rate;
+        if (hours >= 8) {
+          const days = Math.max(1, Math.ceil(hours / 24));
+          fee = days * {{ location.base_rate_per_day|floatformat:0 }};
+        }
+        feeSpan.textContent = "₹" + fee.toFixed(0);
+      }
+
+      entryInput && entryInput.addEventListener("change", updateEstimate);
+      exitInput && exitInput.addEventListener("change", updateEstimate);
+    })();
+  </script>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Login – ParKaro{% endblock %}
+
+{% block content %}
+  <div class="auth-layout">
+    <div class="auth-illustration">
+      <div>
+        <div class="auth-pill">
+          <span>🚗</span>
+          <span>Book a guaranteed slot before you arrive</span>
+        </div>
+        <div class="auth-illustration-title">Never circle for parking again.</div>
+        <p class="auth-illustration-subtitle">
+          ParKaro gives you live visibility into nearby parking, QR-based entry, and extensions
+          in a couple of taps. Designed for busy commuters, mall visitors, and office campuses.
+        </p>
+      </div>
+      <div class="muted">
+        “ParKaro turns a 20-minute hunt into a 2-second scan.”
+      </div>
+    </div>
+    <div class="auth-card">
+      <h2>Welcome back</h2>
+      <p class="auth-subtitle">Sign in with your email, mobile, or username.</p>
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn-primary" type="submit">Login</button>
+      </form>
+      <p class="muted">
+        New to ParKaro?
+        <a href="{% url 'core:register' %}">Create an account</a>
+      </p>
+    </div>
+  </div>
+{% endblock %}

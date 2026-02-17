@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Find Parking – ParKaro{% endblock %}
+
+{% block content %}
+  <h2>Find Parking</h2>
+
+  <div class="card">
+    <form method="get">
+      <input
+        type="text"
+        name="q"
+        placeholder="Search by location name"
+        value="{{ query }}"
+      />
+      <button class="btn-primary" type="submit">Search</button>
+      <button
+        class="btn-primary"
+        type="button"
+        id="use-location-btn"
+        style="margin-left: 8px"
+      >
+        Use my location
+      </button>
+    </form>
+  </div>
+
+  <div class="card">
+    <div id="locations-map" style="width: 100%; height: 320px; margin-bottom: 16px;"></div>
+    <ul>
+      {% for location in locations %}
+        <li>
+          <a href="{% url 'core:location_detail' location.id %}">
+            {{ location.name }}
+          </a>
+          – {{ location.address|truncatechars:120 }}
+          {% if location.available_slots is not None %}
+            <span class="muted">(Available slots: {{ location.available_slots }})</span>
+          {% endif %}
+        </li>
+      {% empty %}
+        <li class="muted">No locations found.</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  {% if google_maps_api_key %}
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}"></script>
+    <script>
+      (function () {
+        const rawLocations = [
+          {% for location in locations %}
+            {
+              id: {{ location.id }},
+              name: "{{ location.name|escapejs }}",
+              lat: {{ location.latitude|default:"null" }},
+              lng: {{ location.longitude|default:"null" }},
+              url: "{% url 'core:location_detail' location.id %}",
+            },
+          {% endfor %}
+        ];
+
+        function initMap(center) {
+          const mapEl = document.getElementById("locations-map");
+          if (!mapEl) return;
+          const defaultCenter = center || { lat: 28.6139, lng: 77.209 }; // default: New Delhi
+          const map = new google.maps.Map(mapEl, {
+            zoom: 12,
+            center: defaultCenter,
+          });
+          rawLocations.forEach((loc) => {
+            if (loc.lat === null || loc.lng === null) return;
+            const marker = new google.maps.Marker({
+              position: { lat: loc.lat, lng: loc.lng },
+              map,
+              title: loc.name,
+            });
+            const infowindow = new google.maps.InfoWindow({
+              content:
+                '<strong>' +
+                loc.name +
+                '</strong><br/><a href="' +
+                loc.url +
+                '">View slots / Book</a>',
+            });
+            marker.addListener("click", () => {
+              infowindow.open(map, marker);
+            });
+          });
+        }
+
+        if (window.google && window.google.maps) {
+          initMap();
+        }
+
+        const useLocationBtn = document.getElementById("use-location-btn");
+        if (useLocationBtn && navigator.geolocation) {
+          useLocationBtn.addEventListener("click", () => {
+            navigator.geolocation.getCurrentPosition(
+              (pos) => {
+                initMap({
+                  lat: pos.coords.latitude,
+                  lng: pos.coords.longitude,
+                });
+              },
+              () => {
+                initMap();
+              }
+            );
+          });
+        }
+      })();
+    </script>
+  {% endif %}
+{% endblock %}

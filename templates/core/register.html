@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Register – ParKaro{% endblock %}
+
+{% block content %}
+  <div class="auth-layout">
+    <div class="auth-illustration">
+      <div>
+        <div class="auth-pill">
+          <span>📊</span>
+          <span>Smart parking for drivers & businesses</span>
+        </div>
+        <div class="auth-illustration-title">Park smarter, earn smarter.</div>
+        <p class="auth-illustration-subtitle">
+          Drivers unlock stress-free arrivals; parking owners unlock higher utilization and
+          live analytics. One account manages bookings, vehicles, and payments in a single view.
+        </p>
+      </div>
+      <div class="muted">
+        Create your account in under a minute. Your primary vehicle and documents stay secure.
+      </div>
+    </div>
+    <div class="auth-card">
+      <h2>Create ParKaro account</h2>
+      <p class="auth-subtitle">
+        Tell us about you and your vehicle so we can secure the right slot every time.
+      </p>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn-primary" type="submit">Register</button>
+      </form>
+      <p class="muted">
+        Already have an account?
+        <a href="{% url 'core:login' %}">Login instead</a>
+      </p>
+    </div>
+  </div>
+{% endblock %}

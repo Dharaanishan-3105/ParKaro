@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Scan Booking – ParKaro{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <h2>Scan or enter booking code</h2>
+    <p class="muted">
+      Paste the scanned code or manually type the booking ID. The system will record entry if
+      none exists yet, otherwise exit.
+    </p>
+    <form method="post">
+      {% csrf_token %}
+      <label for="code">Booking code / ID</label>
+      <input id="code" name="code" type="text" placeholder="e.g. BOOKING:42 or 42" />
+      <button class="btn-primary" type="submit">Submit</button>
+    </form>
+  </div>
+{% endblock %}
+

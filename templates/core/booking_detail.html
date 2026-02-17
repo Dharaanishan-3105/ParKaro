@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Booking #{{ booking.id }} – ParKaro{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <h2>Booking #{{ booking.id }}</h2>
+    <p>
+      Location: {{ booking.location.name }}<br />
+      Slot: {{ booking.slot.slot_code }}<br />
+      Status: {{ booking.get_status_display }}<br />
+      Entry: {{ booking.entry_datetime_expected }}<br />
+      Exit: {{ booking.exit_datetime_expected }}<br />
+      Amount: ₹{{ booking.amount_expected }} (paid: ₹{{ booking.amount_paid }})
+    </p>
+
+    {% if booking.status == 'CONFIRMED' and booking.entry_datetime_expected > now %}
+      <p>
+        <a class="btn-primary" href="{% url 'core:extend_booking' booking.id %}">Extend booking</a>
+        <a class="btn-primary" href="{% url 'core:cancel_booking' booking.id %}">Cancel booking</a>
+      </p>
+    {% endif %}
+
+    {% if booking.qr_code_image %}
+      <h3>Parking QR Code</h3>
+      <img src="{{ booking.qr_code_image.url }}" alt="QR Code for this booking" />
+    {% endif %}
+  </div>
+{% endblock %}

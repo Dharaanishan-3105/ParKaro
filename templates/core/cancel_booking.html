@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Cancel Booking #{{ booking.id }} – ParKaro{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <h2>Cancel Booking #{{ booking.id }}</h2>
+    <p>
+      Location: {{ booking.location.name }}<br />
+      Slot: {{ booking.slot.slot_code }}<br />
+      Start time: {{ booking.entry_datetime_expected }}<br />
+      Time remaining: ~{{ minutes_before }} minutes
+    </p>
+    <p class="muted">
+      Refund policy applied:
+      {% if refund_percentage > 0 %}
+        {{ refund_percentage }}% of paid amount (₹{{ refundable_amount|floatformat:2 }}) will be refunded.
+      {% else %}
+        No refund available for this time window.
+      {% endif %}
+    </p>
+    <form method="post">
+      {% csrf_token %}
+      <button class="btn-primary" type="submit">Confirm cancellation</button>
+    </form>
+  </div>
+{% endblock %}
+
