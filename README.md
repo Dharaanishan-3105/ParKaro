@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="static/logo.jpeg" alt="ParKaro logo" width="130" />
+  <img src="static/logo.jpeg" alt="ParKaro logo" width="200" />
 </p>
 
 <p align="center">
@@ -98,7 +98,7 @@ The project is structured as a production‑style web app: clear domain models, 
 
 
 ## 4. Project layout
-
+```bash
 - `manage.py` – standard Django management entry point  
 - `run.py` – helper script to start the dev server and auto‑open the browser
 
@@ -130,7 +130,7 @@ The project is structured as a production‑style web app: clear domain models, 
 - `static/`
   - `css/styles.css` – layout, typography, buttons, and card styling
   - `logo.jpeg` – ParKaro logo used in the header and README
-
+```
 
 ## 5. Quick start
 
